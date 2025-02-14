@@ -374,6 +374,7 @@ h3 {
         background-image: url(header-marble-mobile.png);
         background-size: cover;
         background-position: center;
+        height: 50vh;
     }
 
     .btn {
@@ -383,6 +384,7 @@ h3 {
     .text {
         margin: auto;
         max-width: 100%;
+        padding-top : 10em;
     }
 
     .header-img {
@@ -456,7 +458,7 @@ h3 {
 
 
     .games-explain h1 {
-        font-size: 1rem;
+        font-size: 5rem;
     }
 
     .text h1 {
@@ -497,8 +499,7 @@ h3 {
     }
 
     .text h1 {
-        font-size: 1rem;
-        color: red;
+        font-size: 3rem;
     }
 
     .text p {
