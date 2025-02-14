@@ -450,6 +450,9 @@ h3 {
 
 @media only screen and (max-width: 860px) {
 
+    #top-nav-bar {    padding-top: 2em;
+        padding-bottom: 2em;}
+
 .logo { font-size:2em;}
 
     .left,
