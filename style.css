@@ -418,6 +418,10 @@ h3 {
 
 @media only screen and (max-width: 860px) {
 
+    .games-explain h1 {
+        font-size: 1rem;
+    }
+
     .text h1 {
         font-size: 3rem;
     }
@@ -450,6 +454,10 @@ h3 {
 }
 
 @media only screen and (max-width: 400px) {
+
+    .games-explain h1 {
+        font-size: 1rem;
+    }
 
     .text h1 {
         font-size: 1rem;
