@@ -367,66 +367,6 @@ h3 {
     .header-img {
         display: none;
     }
-
-}
-
-@media only screen and (max-width: 860px) {
-
-    .text h1 {
-        font-size: 3rem;
-    }
-
-    .text p {
-        font-size: 1.5rem;
-    }
-
-    .intro-img {
-        display: none;
-    }
-
-    .intro-text {
-        width: 100%;
-        padding: 2em;
-    }
-
-    .cards {
-        flex-direction: column;
-    }
-
-    .games {
-        flex-direction: column-reverse;
-    }
-
-    .games-text {
-        width: 100%;
-        padding: 2em;
-    }
-}
-
-}
-
-
-/* Bouton hamburger caché par défaut */
-.hamburger {
-    display: none;
-    font-size: 3rem;
-    background: none;
-    border: none;
-    color: #303030;
-    cursor: pointer;
-}
-
-#hamburger {
-    display: none;
-    font-size: 3rem;
-    background: none;
-    border: none;
-    color:#303030;
-    cursor: pointer;
-}
-
-/* Responsive : passage en mode hamburger sous 1160px */
-@media (max-width: 1160px) {
     .hamburger {
         display: block; /* Afficher le bouton hamburger */
     }
@@ -474,3 +414,91 @@ h3 {
         font-weight: 550;
     }
 }
+
+
+@media only screen and (max-width: 860px) {
+
+    .text h1 {
+        font-size: 3rem;
+    }
+
+    .text p {
+        font-size: 1.5rem;
+    }
+
+    .intro-img {
+        display: none;
+    }
+
+    .intro-text {
+        width: 100%;
+        padding: 2em;
+    }
+
+    .cards {
+        flex-direction: column;
+    }
+
+    .games {
+        flex-direction: column-reverse;
+    }
+
+    .games-text {
+        width: 100%;
+        padding: 2em;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+
+    .text h1 {
+        font-size: 1rem;
+    }
+
+    .text p {
+        font-size: 1.5rem;
+    }
+
+    .intro-img {
+        display: none;
+    }
+
+    .intro-text {
+        width: 100%;
+        padding: 2em;
+    }
+
+    .cards {
+        flex-direction: column;
+    }
+
+    .games {
+        flex-direction: column-reverse;
+    }
+
+    .games-text {
+        width: 100%;
+        padding: 2em;
+    }
+}
+
+
+/* Bouton hamburger caché par défaut */
+.hamburger {
+    display: none;
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color: #303030;
+    cursor: pointer;
+}
+
+#hamburger {
+    display: none;
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color:#303030;
+    cursor: pointer;
+}
+
