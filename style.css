@@ -343,11 +343,32 @@ h3 {
     color: white;
 }
 
+/* Bouton hamburger caché par défaut */
+.hamburger {
+    display: none;
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color: #303030;
+    cursor: pointer;
+}
+
+#hamburger {
+    display: none;
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color: #303030;
+    cursor: pointer;
+}
 
 @media only screen and (max-width: 1160px) {
 
 
-    .text h1 {max-width: 620px;}
+    .text h1 {
+        max-width: 620px;
+    }
+
     header {
         text-align: center;
         background-image: url(header-marble-mobile.png);
@@ -367,16 +388,20 @@ h3 {
     .header-img {
         display: none;
     }
+
     .hamburger {
-        display: block; /* Afficher le bouton hamburger */
+        display: block;
+        /* Afficher le bouton hamburger */
     }
 
     #hamburger {
-        display: block; /* Afficher le bouton hamburger */
+        display: block;
+        /* Afficher le bouton hamburger */
     }
 
     .menu {
-        display: none; /* Cacher le menu par défaut */
+        display: none;
+        /* Cacher le menu par défaut */
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -387,17 +412,22 @@ h3 {
         margin: auto;
         background: white;
         text-align: center;
-        padding : 3em;
+        padding: 3em;
     }
 
-    .menu a {padding : 1em;}
+    .menu a {
+        padding: 1em;
+    }
 
     .menu.open {
-        display: flex; /* Afficher le menu quand on clique */
+        display: flex;
+        /* Afficher le menu quand on clique */
     }
 
-    #navigation-bar {position:fixed;
-    z-index: 3;}
+    #navigation-bar {
+        position: fixed;
+        z-index: 3;
+    }
 
     #participe {
         padding: 1em;
@@ -418,7 +448,8 @@ h3 {
 
 @media only screen and (max-width: 860px) {
 
-    .left, .right {
+    .left,
+    .right {
 
         border-width: 10px;
     }
@@ -467,7 +498,7 @@ h3 {
 
     .text h1 {
         font-size: 1rem;
-        color : red;
+        color: red;
     }
 
     .text p {
@@ -497,23 +528,4 @@ h3 {
     }
 }
 
-
-/* Bouton hamburger caché par défaut */
-.hamburger {
-    display: none;
-    font-size: 3rem;
-    background: none;
-    border: none;
-    color: #303030;
-    cursor: pointer;
-}
-
-#hamburger {
-    display: none;
-    font-size: 3rem;
-    background: none;
-    border: none;
-    color:#303030;
-    cursor: pointer;
-}
 
