@@ -450,6 +450,8 @@ h3 {
 
 @media only screen and (max-width: 860px) {
 
+.logo { font-size:2em;}
+
     .left,
     .right {
 
@@ -493,6 +495,8 @@ h3 {
 }
 
 @media only screen and (max-width: 400px) {
+
+    .logo { font-size:1em;}
 
     .games-explain h1 {
         font-size: 1rem;
