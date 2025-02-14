@@ -1,0 +1,467 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 2em;
+    color: #303030;
+}
+
+.full-width {
+    width: 100%;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1410px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+#top-nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 3em;
+    padding-bottom: 3em;
+}
+
+.logo {
+    font-size: 3em;
+    font-weight: 700;
+    color: #E6007E;
+}
+
+nav a {
+    font-size: 1.4em;
+    text-decoration: none;
+    color: #303030;
+    margin-left: 20px;
+    font-weight: 550;
+}
+
+
+
+#participe {
+    padding: 0.5em 2em;
+    background-color: #E6007E;
+    border-radius: 2em;
+    color: white;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 55vh;
+}
+
+.text {
+    max-width: 30%;
+}
+
+.text h1 {
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 0.8em;
+    text-transform: uppercase;
+}
+
+
+.text p {
+    font-size: 2rem;
+    margin: 20px 0;
+}
+
+.btn {
+    background: #E6007E;
+    color: white;
+    padding: 10px 30px;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 3em;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.header-img {
+    right: 0;
+    z-index: -1;
+}
+
+
+
+.intro {
+    max-width: 1410px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0em auto 5em;
+    gap: 3em;
+}
+
+.intro-img {
+    width: 40%;
+    text-align: center;
+}
+
+.intro-img img {
+    width: 80%;
+}
+
+.intro-text {
+    width: 60%;
+}
+
+.intro-text p {
+    font-size: 1.2em;
+    line-height: 2em;
+    text-align: justify;
+}
+
+.diviseur h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 12vw;
+    padding: 0 !important;
+    line-height: 0.69;
+    user-select: none;
+    /* Désactive la sélection */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+    /* Désactive les interactions avec la souris */
+}
+
+#normal {
+    background-color: white;
+
+}
+
+#normal h1 {
+
+    background: transparent;
+    color: #f4f4f4;
+    padding: 0;
+    user-select: none;
+    /* Désactive la sélection */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+    /* Désactive les interactions avec la souris */
+
+}
+
+#invers {
+    background: url('/img/marble1-removebg-preview.png') no-repeat 79% center fixed;
+    background-size: auto 30%;
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+}
+
+#invers h1 {
+    transform: scaleY(-1);
+    color: white;
+}
+
+.cards {
+    display: flex;
+    margin: auto;
+    max-width: 1000px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 3em;
+    padding: 2em;
+    padding-top: 5rem;
+    padding-bottom: 10rem;
+}
+
+.card {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    border-radius: 2em;
+}
+
+.card-top {
+    background: white;
+    border-radius: 2em 2em 0 0;
+    padding: 2em 2em 2em;
+}
+
+.card-bottom {
+    color: white;
+    background: #E6007E;
+    border-radius: 0 0 2em 2em;
+    padding: 2em;
+    text-align: center;
+}
+
+h2 {
+    color: #303030;
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+h3 {
+    text-align: center;
+    color: #b9b9b9;
+
+}
+
+
+
+
+
+.games-explain {
+    padding-top: 10em;
+    position: relative;
+}
+
+.games-explain h1 {
+    font-size: 7rem;
+    text-align: center;
+    padding-bottom: 8rem;
+    color: #303030;
+    text-transform: uppercase;
+}
+
+.games {
+    max-width: 1410px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0em auto 14em;
+    gap: 3em;
+}
+
+.games-img {
+    width: 50%;
+    text-align: center;
+}
+
+.games-img img {
+    width: 80%;
+}
+
+.games-text {
+    width: 50%;
+}
+
+.games-text p {
+    font-size: 1.2em;
+    line-height: 2em;
+    text-align: justify;
+}
+
+.left {
+    flex-direction: row;
+    border-left-style: solid;
+    border-color: #E6007E;
+    border-width: 40px;
+}
+
+.right {
+    flex-direction: row-reverse;
+    border-right-style: solid;
+    border-color: #E6007E;
+    border-width: 40px;
+}
+
+.games:last-child {
+    margin: 0em auto 5em;
+}
+
+.reglement-page {
+    position: relative;
+}
+
+.marble2 {
+    position: absolute;
+    width: 20%;
+    /* Ajuste la taille selon le viewport */
+    max-width: 100%;
+    min-width: 20%;
+    left: 0;
+    /* Ajuste selon le design */
+    top: 0;
+    /* Pour coller à la jointure */
+    transform: translateY(-50%) translateX(-50%);
+    /* Centre la bille */
+}
+
+.marble3 {
+    position: absolute;
+    width: 20%;
+    /* Ajuste la taille selon le viewport */
+    max-width: 15%;
+    min-width: 10%;
+    right: 0;
+    /* Ajuste selon le design */
+    top: 0;
+    /* Pour coller à la jointure */
+    transform: translateY(-50%);
+    /* Centre la bille */
+    z-index: 1;
+
+}
+
+.reglement {
+    margin-top: 7em;
+}
+
+.reglement h3 {
+    text-align: left;
+}
+
+.reglement p {
+    margin-bottom: 3em;
+}
+
+
+#invers2 h1 {
+    transform: scaleY(-1);
+    color: white;
+}
+
+
+@media only screen and (max-width: 1160px) {
+
+
+    .text h1 {max-width: 620px;}
+    header {
+        text-align: center;
+        background-image: url(/img/header-marble-mobile.png);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .btn {
+        display: none;
+    }
+
+    .text {
+        margin: auto;
+        max-width: 100%;
+    }
+
+    .header-img {
+        display: none;
+    }
+
+}
+
+@media only screen and (max-width: 860px) {
+    .intro-img {
+        display: none;
+    }
+
+    .intro-text {
+        width: 100%;
+        padding: 2em;
+    }
+
+    .cards {
+        flex-direction: column;
+    }
+
+    .games {
+        flex-direction: column-reverse;
+    }
+
+    .games-text {
+        width: 100%;
+        padding: 2em;
+    }
+}
+
+}
+
+
+/* Bouton hamburger caché par défaut */
+.hamburger {
+    display: none;
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color: #303030;
+    cursor: pointer;
+}
+
+#hamburger {
+    display: none;
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color:#303030;
+    cursor: pointer;
+}
+
+/* Responsive : passage en mode hamburger sous 1160px */
+@media (max-width: 1160px) {
+    .hamburger {
+        display: block; /* Afficher le bouton hamburger */
+    }
+
+    #hamburger {
+        display: block; /* Afficher le bouton hamburger */
+    }
+
+    .menu {
+        display: none; /* Cacher le menu par défaut */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 6em;
+        left: 0%;
+        width: 100%;
+        margin: auto;
+        background: white;
+        text-align: center;
+        padding : 3em;
+    }
+
+    .menu a {padding : 1em;}
+
+    .menu.open {
+        display: flex; /* Afficher le menu quand on clique */
+    }
+
+    #navigation-bar {position:fixed;
+    z-index: 3;}
+
+    #participe {
+        padding: 1em;
+        background-color: white;
+        border-radius: 2em;
+        color: #E6007E;
+    }
+
+    nav a {
+        font-size: 1.4em;
+        text-decoration: none;
+        color: #303030;
+        margin-left: 20px;
+        font-weight: 550;
+    }
+}
