@@ -371,6 +371,15 @@ h3 {
 }
 
 @media only screen and (max-width: 860px) {
+
+    .text h1 {
+        font-size: 3rem;
+    }
+
+    .text p {
+        font-size: 1.5rem;
+    }
+
     .intro-img {
         display: none;
     }
