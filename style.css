@@ -168,7 +168,7 @@ header {
 }
 
 #invers {
-    background: url('/img/marble1-removebg-preview.png') no-repeat 79% center fixed;
+    background: url('marble1-removebg-preview.png') no-repeat 79% center fixed;
     background-size: auto 30%;
     position: relative;
     z-index: 1;
@@ -350,7 +350,7 @@ h3 {
     .text h1 {max-width: 620px;}
     header {
         text-align: center;
-        background-image: url(/img/header-marble-mobile.png);
+        background-image: url(header-marble-mobile.png);
         background-size: cover;
         background-position: center;
     }
@@ -417,6 +417,12 @@ h3 {
 
 
 @media only screen and (max-width: 860px) {
+
+    .left, .right {
+
+        border-width: 10px;
+    }
+
 
     .games-explain h1 {
         font-size: 1rem;
