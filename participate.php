@@ -20,7 +20,7 @@
 
     <div id="navigation-bar" class="full-width">
         <nav id="top-nav-bar" class="container">
-            <a href="/index.html" class="logo">LOGO RANDOM</a>
+            <a href="https://ultranawak.github.io/ultimate-marble" class="logo">LOGO RANDOM</a>
             
             <p class="hamburger" id="hamburger">&#9776;</p> <!-- Icône hamburger -->
             <div class="menu" id="menu">
