@@ -238,7 +238,7 @@ h3 {
 }
 
 
-
+#introduction-participate {padding : 15em 0;}
 
 
 .games-explain {
@@ -351,6 +351,11 @@ h3 {
 #invers2 h1 {
     transform: scaleY(-1);
     color: white;
+}
+
+#invers3 h1 {
+    transform: scaleY(-1);
+    color: #f4f4f4;
 }
 
 /* Bouton hamburger caché par défaut */
