@@ -17,6 +17,15 @@ body {
     background-color: #f4f4f4;
 }
 
+#navigation-bar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+}
+
+
+
 .container {
     max-width: 1410px;
     padding: 0 20px;
@@ -55,6 +64,7 @@ nav a {
 }
 
 header {
+    padding-top : 30em;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -426,10 +436,7 @@ h3 {
         /* Afficher le menu quand on clique */
     }
 
-    #navigation-bar {
-        position: fixed;
-        z-index: 3;
-    }
+  
 
     #participe {
         padding: 1em;
