@@ -37,13 +37,13 @@ async function afficherBilles() {
     console.log(bille);
     if (billes[bille].messageId) {
       // Si le message existe déjà (messageId défini), on passe à la bille suivante
-     // console.log(${bille} a déjà un message avec ID ${billes[bille].messageId});
       continue;
     }
     else {
-    const message = await channel.send(`Réservez maintenant : ${bille}`);
-    await message.react('👍');
-    billes[bille].messageId = message.id;
+      const message = await channel.send(`Réservez maintenant : ${bille}`);
+      await message.react('👍');
+      billes[bille].messageId = message.id;
+    }
   }
 }
 
@@ -65,33 +65,21 @@ client.once('ready', async () => {
 
 // Gestion des réactions ajoutées (réservation)
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (!reaction.message.author.bot || user.bot) return;
-  
-    if (reaction.emoji.name === '✅' && reaction.message.channelId === WELCOME_CHANNEL_ID) {
-      const guild = reaction.message.guild;
-      const member = await guild.members.fetch(user.id);
-      const role = guild.roles.cache.find(r => r.name === ROLE_NAME);
-      if (role && member) {
-        await member.roles.add(role);
-        user.send("Vous avez reçu le rôle 'inscrit' !");
-      }
+  if (!reaction.message.author.bot || user.bot) return;
+
+  if (reaction.emoji.name === '✅' && reaction.message.channelId === WELCOME_CHANNEL_ID) {
+    const guild = reaction.message.guild;
+    const member = await guild.members.fetch(user.id);
+    const role = guild.roles.cache.find(r => r.name === ROLE_NAME);
+    if (role && member) {
+      await member.roles.add(role);
+      user.send("Vous avez reçu le rôle 'inscrit' !");
     }
-  
-    if (reaction.emoji.name === '👍') {
-      //const billeToReserve = reaction.message.content.replace('Réservez maintenant : ', '').trim();
-  
-   //   const billeToReserve = reaction.message.content
- // .replace(/~~/g, '') // Supprime les 
- 
- // .replace(/(Réservée par .*?)/, '') // Supprime la mention de réservation
- // .replace('Réservez maintenant : ', '') // Supprime l'intro du message
- // .replace(user.username, '') // Supprime le nom de l'utilisateur
-// .trim();
+  }
 
-
-
-const billeToReserve = reaction.message.content.match(/\bBille \d+\b/);
-console.log(billeToReserve, 'maxime aime les chouettes un truc comme ça');
+  if (reaction.emoji.name === '👍') {
+    const billeToReserve = reaction.message.content.match(/\bBille \d+\b/);
+    console.log(billeToReserve, 'maxime aime les chouettes un truc comme ça');
 
     if (billes[billeToReserve]) {
       console.log(reservations.has(user.username) + ' bille déja réservée par', user.name);
@@ -123,35 +111,35 @@ console.log(billeToReserve, 'maxime aime les chouettes un truc comme ça');
     }
   }
 });
-  
-  // Gestion des réactions supprimées (annulation de réservation)
-  client.on('messageReactionRemove', async (reaction, user) => {
-    if (!reaction.message.author.bot || user.bot) return;
-  
-    if (reaction.emoji.name === '✅' && reaction.message.channelId === WELCOME_CHANNEL_ID) {
-      const guild = reaction.message.guild;
-      const member = await guild.members.fetch(user.id);
-      const role = guild.roles.cache.find(r => r.name === ROLE_NAME);
-      if (role && member) {
-        await member.roles.remove(role);
-        user.send("Votre rôle 'inscrit' a été retiré.");
-      }
+
+// Gestion des réactions supprimées (annulation de réservation)
+client.on('messageReactionRemove', async (reaction, user) => {
+  if (!reaction.message.author.bot || user.bot) return;
+
+  if (reaction.emoji.name === '✅' && reaction.message.channelId === WELCOME_CHANNEL_ID) {
+    const guild = reaction.message.guild;
+    const member = await guild.members.fetch(user.id);
+    const role = guild.roles.cache.find(r => r.name === ROLE_NAME);
+    if (role && member) {
+      await member.roles.remove(role);
+      user.send("Votre rôle 'inscrit' a été retiré.");
     }
-  
-    if (reaction.emoji.name === '👍') {
-      const billeToUnreserve = reaction.message.content.replace('~~Réservez maintenant : ', '').replace('~~ (Réservée par ' + user.username + ')', '').trim();
-  
-      if (billes[billeToUnreserve] && billes[billeToUnreserve].reserved && billes[billeToUnreserve].reserverPar === user.username) {
-        billes[billeToUnreserve].reserved = false;
-        billes[billeToUnreserve].reserverPar = null;
-        reservations.delete(user.username);
-        await reaction.message.edit(`Réservez maintenant : ${billeToUnreserve}`);
-        user.send(`Votre réservation de ${billeToUnreserve} a été annulée.`);
-      }
+  }
+
+  if (reaction.emoji.name === '👍') {
+    const billeToUnreserve = reaction.message.content.replace('~~Réservez maintenant : ', '').replace('~~ (Réservée par ' + user.username + ')', '').trim();
+
+    if (billes[billeToUnreserve] && billes[billeToUnreserve].reserved && billes[billeToUnreserve].reserverPar === user.username) {
+      billes[billeToUnreserve].reserved = false;
+      billes[billeToUnreserve].reserverPar = null;
+      reservations.delete(user.username);
+      await reaction.message.edit(`Réservez maintenant : ${billeToUnreserve}`);
+      user.send(`Votre réservation de ${billeToUnreserve} a été annulée.`);
     }
-  });
-  
-  // Connexion du bot avec le token
-  client.login(process.env.DISCORD_TOKEN).then(() => {
-    console.log('Token chargé : Oui');
-  });
+  }
+});
+
+// Connexion du bot avec le token
+client.login(process.env.DISCORD_TOKEN).then(() => {
+  console.log('Token chargé : Oui');
+});
