@@ -13,5 +13,8 @@
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.8"
   }
 }
