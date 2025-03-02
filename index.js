@@ -14,6 +14,91 @@ const client = new Client({
   partials: [Partials.Message, Partials.Reaction],
 });
 
+
+// ...existing code...
+
+const RESA_CHANNEL_ID = "1345791307221696563"; // ID du salon de réservation
+
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+
+  // Vérifier si l'utilisateur est administrateur
+  const isAdmin = message.member.permissions.has('ADMINISTRATOR');
+
+  // Commande pour créer une bille
+  if (message.content.startsWith('!create')) {
+    if (!isAdmin) {
+      return message.reply("Vous n'êtes pas autorisé à utiliser cette commande.");
+    }
+
+    const args = message.content.split(' ');
+    const billeName = args[1];
+    const billeImage = args[2]; // URL de l'image
+
+    if (!billeName || !billeImage) {
+      return message.reply("Usage: !create <nom_bille> <url_image>");
+    }
+
+    const channel = await client.channels.fetch(RESA_CHANNEL_ID);
+    if (!channel) return console.error("Canal de réservation non trouvé");
+
+    const messageContent = `Nom: ${billeName}\nStatus: Libre`;
+    const messageEmbed = {
+      color: 0x0099ff,
+      title: billeName,
+      description: 'Status: Libre',
+      image: {
+        url: billeImage,
+      },
+    };
+
+    const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
+    await billeMessage.react('👍');
+
+    billes[billeName] = {
+      reserved: false,
+      reserverPar: null,
+      messageId: billeMessage.id,
+      image: billeImage,
+    };
+
+    message.reply(`Bille ${billeName} créée avec succès.`);
+  }
+
+  // Commande pour supprimer une bille
+  if (message.content.startsWith('!delete')) {
+    if (!isAdmin) {
+      return message.reply("Vous n'êtes pas autorisé à utiliser cette commande.");
+    }
+
+    const args = message.content.split(' ');
+    const billeId = args[1];
+
+    if (!billeId) {
+      return message.reply("Usage: !delete <id_bille>");
+    }
+
+    const bille = Object.keys(billes).find(b => billes[b].messageId === billeId);
+    if (!bille) {
+      return message.reply("Bille non trouvée.");
+    }
+
+    const channel = await client.channels.fetch(RESA_CHANNEL_ID);
+    if (!channel) return console.error("Canal de réservation non trouvé");
+
+    const billeMessage = await channel.messages.fetch(billes[bille].messageId);
+    if (billeMessage) {
+      await billeMessage.delete();
+    }
+
+    delete billes[bille];
+    message.reply(`Bille ${bille} supprimée avec succès.`);
+  }
+});
+
+// ...existing code...
+
+
 // Liste des billes disponibles
 const billes = {
   "Bille 1": { reserved: false, reserverPar: null, messageId: null },
