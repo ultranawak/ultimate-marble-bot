@@ -34,20 +34,23 @@ client.on('messageCreate', async (message) => {
   // Commande pour créer une bille
   if (message.content.startsWith('!create')) {
     if (!isAdmin) {
-      return message.reply("Vous n'êtes pas autorisé à utiliser cette commande.");
+      await message.delete();
+      return message.author.send("Vous n'êtes pas autorisé à utiliser cette commande.");
     }
 
-    const args = message.content.match(/"([^"]+)"\s+(\S+)\s+(libre|<@\d+>)/);
+    const args = message.content.match(/"([^"]+)"\s+(\S+)\s+(libre|\d+)/);
     if (!args) {
-      return message.reply("Usage: !create \"<nom_bille>\" <url_image> <libre|@user>");
+      await message.delete();
+      return message.author.send("Usage: !create \"<nom_bille>\" <url_image> <libre|user_id>");
     }
 
     const billeName = args[1];
     const billeImage = args[2];
-    const statusOrUser = args[3];
+    const statusOrUserId = args[3];
 
     if (!isValidUrl(billeImage)) {
-      return message.reply("L'URL de l'image fournie n'est pas valide.");
+      await message.delete();
+      return message.author.send("L'URL de l'image fournie n'est pas valide.");
     }
 
     const channel = await client.channels.fetch(RESA_CHANNEL_ID);
@@ -58,13 +61,14 @@ client.on('messageCreate', async (message) => {
     const existingMessage = messages.find(msg => msg.embeds[0]?.title === billeName);
 
     if (existingMessage) {
+      await message.delete();
       return message.author.send(`Une bille avec le nom "${billeName}" existe déjà.`);
     }
 
     let messageContent;
     let messageEmbed;
 
-    if (statusOrUser === "libre") {
+    if (statusOrUserId === "libre") {
       messageContent = `Vous pouvez réserver la ${billeName}`;
       messageEmbed = {
         color: 0x0099ff,
@@ -75,16 +79,17 @@ client.on('messageCreate', async (message) => {
         },
       };
     } else {
-      const user = message.mentions.users.first();
+      const user = await client.users.fetch(statusOrUserId);
       if (!user) {
-        return message.reply("L'utilisateur mentionné n'est pas valide.");
+        await message.delete();
+        return message.author.send("L'utilisateur mentionné n'est pas valide.");
       }
 
-      messageContent = `La ${billeName} est réservée par ${user}`;
+      messageContent = `La ${billeName} est réservée par ${user.tag}`;
       messageEmbed = {
         color: 0xff0000,
         title: billeName,
-        description: `Cette bille est réservée par ${user}.`,
+        description: `Cette bille est réservée par ${user.tag}.`,
         image: {
           url: billeImage,
         },
@@ -94,6 +99,7 @@ client.on('messageCreate', async (message) => {
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
     await billeMessage.react('👍');
 
+    await message.delete();
     message.author.send(`"${billeName}" créé avec succès.`);
   }
 });
