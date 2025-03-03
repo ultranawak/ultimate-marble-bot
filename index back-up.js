@@ -60,7 +60,7 @@ client.on('messageCreate', async (message) => {
 
     // Vérifier si une bille avec le même nom existe déjà
     const messages = await channel.messages.fetch({ limit: 100 });
-    const existingMessage = messages.find(msg => msg.content.includes(billeName));
+    const existingMessage = messages.find(msg => msg.embeds[0]?.title === billeName);
 
     if (existingMessage) {
       await message.delete();
@@ -68,9 +68,18 @@ client.on('messageCreate', async (message) => {
     }
 
     let messageContent;
+    let messageEmbed;
 
     if (statusOrUserId === "libre") {
-      messageContent = `Vous pouvez réserver la ${billeName}\n${billeImage}`;
+      messageContent = `Vous pouvez réserver la ${billeName}`;
+      messageEmbed = {
+        color: 0x0099ff,
+        title: billeName,
+        description: 'Vous pouvez réserver cette bille.',
+        image: {
+          url: billeImage,
+        },
+      };
     } else {
       const guild = message.guild;
       const member = await guild.members.fetch(statusOrUserId);
@@ -81,7 +90,15 @@ client.on('messageCreate', async (message) => {
 
       const displayName = member.displayName;
 
-      messageContent = `La ${billeName} est réservée par ${displayName}\n${billeImage}`;
+      messageContent = `La ${billeName} est réservée par ${displayName}`;
+      messageEmbed = {
+        color: 0xff0000,
+        title: billeName,
+        description: `Cette bille est réservée par <@${statusOrUserId}>.`,
+        image: {
+          url: billeImage,
+        },
+      };
     }
 
     // Ajouter un séparateur si ce n'est pas la première bille
@@ -89,7 +106,7 @@ client.on('messageCreate', async (message) => {
       await channel.send('---'); // Séparateur
     }
 
-    const billeMessage = await channel.send(messageContent);
+    const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
     await billeMessage.react('👍');
 
     await message.delete();
@@ -109,24 +126,33 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
   if (!reaction.message.author.bot || reaction.emoji.name !== '👍' || user.bot) return;
 
-  const billeNameMatch = reaction.message.content.match(/La (.+) est réservée par|Vous pouvez réserver la (.+)/);
-  const billeName = billeNameMatch ? (billeNameMatch[1] || billeNameMatch[2]) : null;
+  const billeName = reaction.message.embeds[0]?.title;
   if (!billeName) return;
 
   const channel = await client.channels.fetch(RESA_CHANNEL_ID);
   if (!channel) return console.error("Canal de réservation non trouvé");
 
   const messages = await channel.messages.fetch({ limit: 100 });
-  const billeMessage = messages.find(msg => msg.content.includes(billeName));
+  const billeMessage = messages.find(msg => msg.embeds[0]?.title === billeName);
   if (!billeMessage) return;
 
-  const reserverParMatch = billeMessage.content.match(/réservée par <@(\d+)>/);
+  const billeEmbed = billeMessage.embeds[0];
+  const reserverParMatch = billeEmbed.description.match(/réservée par <@(\d+)>/);
   const reserverParId = reserverParMatch ? reserverParMatch[1] : null;
 
   if (reserverParId === user.id) {
     // Annuler la réservation
-    const newContent = billeMessage.content.replace(/La (.+) est réservée par .+/, `Vous pouvez réserver la ${billeName}`);
-    await billeMessage.edit(newContent);
+    await billeMessage.edit({
+      content: `Vous pouvez réserver la ${billeName}`,
+      embeds: [{
+        color: 0x0099ff,
+        title: billeName,
+        description: 'Vous pouvez réserver cette bille.',
+        image: {
+          url: billeEmbed.image.url,
+        },
+      }],
+    });
     await user.send(`Votre réservation de la bille "${billeName}" a été annulée.`);
     await reaction.users.remove(user.id);
   } else if (reserverParId && reserverParId !== user.id) {
@@ -137,10 +163,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
     await reaction.users.remove(user.id);
   } else if (!reserverParId) {
     // Vérifier si l'utilisateur a déjà une réservation
-    const existingReservation = messages.find(msg => msg.content.includes(`réservée par <@${user.id}>`));
+    const existingReservation = messages.find(msg => msg.embeds[0]?.description.includes(`réservée par <@${user.id}>`));
     if (existingReservation) {
-      const existingBilleNameMatch = existingReservation.content.match(/La (.+) est réservée par/);
-      const existingBilleName = existingBilleNameMatch ? existingBilleNameMatch[1] : null;
+      const existingBilleName = existingReservation.embeds[0].title;
       const existingMessageId = existingReservation.id;
       const existingMessageLink = `https://discord.com/channels/${channel.guild.id}/${channel.id}/${existingMessageId}`;
       await user.send(`Vous avez déjà réservé la bille "${existingBilleName}". Veuillez annuler votre réservation [ici](${existingMessageLink}) avant d'en choisir une autre.`);
@@ -151,8 +176,17 @@ client.on('messageReactionAdd', async (reaction, user) => {
       const member = await guild.members.fetch(user.id);
       const displayName = member.displayName;
 
-      const newContent = billeMessage.content.replace(/Vous pouvez réserver la (.+)/, `La ${billeName} est réservée par ${displayName}`);
-      await billeMessage.edit(newContent);
+      await billeMessage.edit({
+        content: `La ${billeName} est réservée par ${displayName}`,
+        embeds: [{
+          color: 0xff0000,
+          title: billeName,
+          description: `Cette bille est réservée par <@${user.id}>.`,
+          image: {
+            url: billeEmbed.image.url,
+          },
+        }],
+      });
       await user.send(`Vous avez réservé la bille "${billeName}".`);
       await reaction.users.remove(user.id);
     }
