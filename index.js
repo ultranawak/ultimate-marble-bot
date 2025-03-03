@@ -112,9 +112,9 @@ client.on('messageCreate', async (message) => {
     }
 
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
-    await billeMessage.react('👍'); // Ajout de la réaction de pouce jaune
-
     billes.get(billeName).messageId = billeMessage.id;
+
+    await billeMessage.react('👍'); // Ajout de la réaction de pouce jaune
 
     await message.delete();
     message.author.send(`"${billeName}" créé avec succès.`).catch(console.error);
