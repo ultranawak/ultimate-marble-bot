@@ -1,22 +1,12 @@
-# fly.toml app configuration file generated for ultimate-marble-bot-long-hill-6105 on 2025-03-03T16:11:26-05:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+# fly.toml app configuration file for ultimate-marble-bot
 
-app = 'ultimate-marble-bot-long-hill-6105'
-primary_region = 'ewr'
+app = "ultimate-marble-bot"
+primary_region = "ewr"
 
 [build]
 
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
 
 [[vm]]
-  memory = '256'
-  cpu_kind = 'shared'
+  memory = "256"
+  cpu_kind = "shared"
   cpus = 1
