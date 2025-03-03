@@ -1,0 +1,16 @@
+#!/bin/bash
+>>
+>> # Ajouter toutes les modifications
+>> git add .
+>>
+>> # Commiter les modifications
+>> git commit -m "Mise à jour du code"
+>>
+>> # Pousser les modifications vers le dépôt distant
+>> git push origin master
+>>
+>> # Déployer les modifications sur Fly.io
+>> flyctl deploy
+>>
+>> # Redémarrer l'application sur Fly.io
+>> flyctl apps restart
