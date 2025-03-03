@@ -101,10 +101,6 @@ client.on('messageCreate', async (message) => {
       };
     }
 
-    // Ajouter un séparateur si ce n'est pas la première bille
-    if (messages.size > 0) {
-      await channel.send('---'); // Séparateur
-    }
 
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
     await billeMessage.react('👍');
