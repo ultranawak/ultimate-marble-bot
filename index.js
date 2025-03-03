@@ -90,7 +90,7 @@ client.on('messageCreate', async (message) => {
 
       const displayName = member.displayName;
 
-      messageContent = `La ${billeName} est réservée par ${displayName}`;
+     // messageContent = `La ${billeName} est réservée par ${displayName}`;
       messageEmbed = {
         color: 0xff0000,
         title: billeName,
@@ -99,6 +99,11 @@ client.on('messageCreate', async (message) => {
           url: billeImage,
         },
       };
+    }
+
+    // Ajouter un séparateur si ce n'est pas la première bille
+    if (messages.size > 0) {
+      await channel.send('---'); // Séparateur
     }
 
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
