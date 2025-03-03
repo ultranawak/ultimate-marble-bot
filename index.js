@@ -81,17 +81,20 @@ client.on('messageCreate', async (message) => {
         },
       };
     } else {
-      const user = await client.users.fetch(statusOrUserId);
-      if (!user) {
+      const guild = message.guild;
+      const member = await guild.members.fetch(statusOrUserId);
+      if (!member) {
         await message.delete();
         return message.author.send("L'utilisateur mentionné n'est pas valide.");
       }
 
-      messageContent = `La ${billeName} est réservée par ${user.username}`;
+      const displayName = member.displayName;
+
+      messageContent = `La ${billeName} est réservée par ${displayName}`;
       messageEmbed = {
         color: 0xff0000,
         title: billeName,
-        description: `Cette bille est réservée par ${user.username}.`,
+        description: `Cette bille est réservée par ${displayName}.`,
         image: {
           url: billeImage,
         },
@@ -159,12 +162,16 @@ client.on('messageReactionAdd', async (reaction, user) => {
       await reaction.users.remove(user.id);
     } else {
       // Réserver la bille
+      const guild = reaction.message.guild;
+      const member = await guild.members.fetch(user.id);
+      const displayName = member.displayName;
+
       await billeMessage.edit({
-        content: `La ${billeName} est réservée par ${user.username}`,
+        content: `La ${billeName} est réservée par ${displayName}`,
         embeds: [{
           color: 0xff0000,
           title: billeName,
-          description: `Cette bille est réservée par ${user.username}.`,
+          description: `Cette bille est réservée par ${displayName}.`,
           image: {
             url: billeEmbed.image.url,
           },
