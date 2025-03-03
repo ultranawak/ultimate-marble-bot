@@ -42,13 +42,13 @@ client.on('messageCreate', async (message) => {
   if (message.content.startsWith('!create')) {
     if (!isAdmin) {
       await message.delete();
-      return message.author.send("Vous n'êtes pas autorisé à utiliser cette commande.");
+      return message.author.send("Vous n'êtes pas autorisé à utiliser cette commande.").catch(console.error);
     }
 
     const args = message.content.match(/"([^"]+)"\s+(\S+)\s+(libre|\d+)/);
     if (!args) {
       await message.delete();
-      return message.author.send("Usage: !create \"<nom_bille>\" <url_image> <libre|user_id>");
+      return message.author.send("Usage: !create \"<nom_bille>\" <url_image> <libre|user_id>").catch(console.error);
     }
 
     const billeName = args[1];
@@ -59,7 +59,7 @@ client.on('messageCreate', async (message) => {
 
     if (!isValidUrl(billeImage)) {
       await message.delete();
-      return message.author.send("L'URL de l'image fournie n'est pas valide.");
+      return message.author.send("L'URL de l'image fournie n'est pas valide.").catch(console.error);
     }
 
     const channel = await client.channels.fetch(RESA_CHANNEL_ID);
@@ -73,7 +73,7 @@ client.on('messageCreate', async (message) => {
 
     if (existingMessage) {
       await message.delete();
-      return message.author.send(`Une bille avec le nom "${billeName}" existe déjà.`);
+      return message.author.send(`Une bille avec le nom "${billeName}" existe déjà.`).catch(console.error);
     }
 
     let messageContent;
@@ -95,7 +95,7 @@ client.on('messageCreate', async (message) => {
       const user = await client.users.fetch(statusOrUserId);
       if (!user) {
         await message.delete();
-        return message.author.send("L'utilisateur mentionné n'est pas valide.");
+        return message.author.send("L'utilisateur mentionné n'est pas valide.").catch(console.error);
       }
 
       messageContent = `La ${billeName} est réservée par ${user.username}`;
@@ -117,7 +117,7 @@ client.on('messageCreate', async (message) => {
     billes.get(billeName).messageId = billeMessage.id;
 
     await message.delete();
-    message.author.send(`"${billeName}" créé avec succès.`);
+    message.author.send(`"${billeName}" créé avec succès.`).catch(console.error);
   }
 });
 
@@ -175,13 +175,13 @@ client.on('messageReactionAdd', async (reaction, user) => {
         },
       }],
     });
-    await user.send(`Votre réservation de la bille "${billeName}" a été annulée.`);
+    await user.send(`Votre réservation de la bille "${billeName}" a été annulée.`).catch(console.error);
     await reaction.users.remove(user.id);
   } else if (bille.reserved && bille.reserverPar !== user.id) {
     // Bille déjà réservée par un autre utilisateur
     console.log(`Bille déjà réservée par un autre utilisateur : ${billeName}`);
     const reserverUser = await client.users.fetch(bille.reserverPar);
-    await user.send(`Désolé, cette bille est déjà réservée par ${reserverUser.username}.`);
+    await user.send(`Désolé, cette bille est déjà réservée par ${reserverUser.username}.`).catch(console.error);
     await reaction.users.remove(user.id);
   } else if (!bille.reserved) {
     // Vérifier si l'utilisateur a déjà une réservation
@@ -189,7 +189,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     const existingReservation = Array.from(billes.values()).find(b => b.reserverPar === user.id);
     if (existingReservation) {
       console.log(`L'utilisateur a déjà une réservation : ${existingReservation.billeName}`);
-      await user.send(`Vous avez déjà réservé la bille "${existingReservation.billeName}". Veuillez annuler votre réservation avant d'en choisir une autre.`);
+      await user.send(`Vous avez déjà réservé la bille "${existingReservation.billeName}". Veuillez annuler votre réservation avant d'en choisir une autre.`).catch(console.error);
       await reaction.users.remove(user.id);
     } else {
       // Réserver la bille
@@ -207,7 +207,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
           },
         }],
       });
-      await user.send(`Vous avez réservé la bille "${billeName}".`);
+      await user.send(`Vous avez réservé la bille "${billeName}".`).catch(console.error);
       await reaction.users.remove(user.id);
     }
   }
