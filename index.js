@@ -94,7 +94,7 @@ client.on('messageCreate', async (message) => {
       messageEmbed = {
         color: 0xff0000,
         title: billeName,
-        description: `Cette bille est réservée par ${displayName}.`,
+        description: `Cette bille est réservée par <@${statusOrUserId}>.`,
         image: {
           url: billeImage,
         },
@@ -132,9 +132,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
   if (!billeMessage) return;
 
   const billeEmbed = billeMessage.embeds[0];
-  const reserverPar = billeEmbed.description.match(/réservée par (.+)\./)?.[1];
+  const reserverParMatch = billeEmbed.description.match(/réservée par <@(\d+)>/);
+  const reserverParId = reserverParMatch ? reserverParMatch[1] : null;
 
-  if (reserverPar === user.username) {
+  if (reserverParId === user.id) {
     // Annuler la réservation
     await billeMessage.edit({
       content: `Vous pouvez réserver la ${billeName}`,
@@ -149,13 +150,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
     });
     await user.send(`Votre réservation de la bille "${billeName}" a été annulée.`);
     await reaction.users.remove(user.id);
-  } else if (reserverPar && reserverPar !== user.username) {
+  } else if (reserverParId && reserverParId !== user.id) {
     // Bille déjà réservée par un autre utilisateur
-    await user.send(`Désolé, cette bille est déjà réservée par ${reserverPar}.`);
+    const reserverParMember = await reaction.message.guild.members.fetch(reserverParId);
+    const reserverParDisplayName = reserverParMember ? reserverParMember.displayName : reserverParId;
+    await user.send(`Désolé, cette bille est déjà réservée par ${reserverParDisplayName}.`);
     await reaction.users.remove(user.id);
-  } else if (!reserverPar) {
+  } else if (!reserverParId) {
     // Vérifier si l'utilisateur a déjà une réservation
-    const existingReservation = messages.find(msg => msg.embeds[0]?.description.includes(`réservée par ${user.username}`));
+    const existingReservation = messages.find(msg => msg.embeds[0]?.description.includes(`réservée par <@${user.id}>`));
     if (existingReservation) {
       const existingBilleName = existingReservation.embeds[0].title;
       const existingMessageId = existingReservation.id;
@@ -173,7 +176,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         embeds: [{
           color: 0xff0000,
           title: billeName,
-          description: `Cette bille est réservée par ${displayName}.`,
+          description: `Cette bille est réservée par <@${user.id}>.`,
           image: {
             url: billeEmbed.image.url,
           },
