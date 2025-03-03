@@ -27,45 +27,36 @@ function isValidUrl(string) {
 
 const RESA_CHANNEL_ID = "1345791307221696563"; // ID du canal de réservation
 
-const billes = new Map(); // Stocke les informations des billes
-
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  console.log(`Message reçu : ${message.content}`);
-
   // Vérifier si l'utilisateur est administrateur
   const isAdmin = message.member.permissions.has('ADMINISTRATOR');
-  console.log(`L'utilisateur est administrateur : ${isAdmin}`);
 
   // Commande pour créer une bille
   if (message.content.startsWith('!create')) {
     if (!isAdmin) {
       await message.delete();
-      return message.author.send("Vous n'êtes pas autorisé à utiliser cette commande.").catch(console.error);
+      return message.author.send("Vous n'êtes pas autorisé à utiliser cette commande.");
     }
 
     const args = message.content.match(/"([^"]+)"\s+(\S+)\s+(libre|\d+)/);
     if (!args) {
       await message.delete();
-      return message.author.send("Usage: !create \"<nom_bille>\" <url_image> <libre|user_id>").catch(console.error);
+      return message.author.send("Usage: !create \"<nom_bille>\" <url_image> <libre|user_id>");
     }
 
     const billeName = args[1];
     const billeImage = args[2];
     const statusOrUserId = args[3];
 
-    console.log(`Arguments extraits : nom=${billeName}, image=${billeImage}, statusOrUser=${statusOrUserId}`);
-
     if (!isValidUrl(billeImage)) {
       await message.delete();
-      return message.author.send("L'URL de l'image fournie n'est pas valide.").catch(console.error);
+      return message.author.send("L'URL de l'image fournie n'est pas valide.");
     }
 
     const channel = await client.channels.fetch(RESA_CHANNEL_ID);
     if (!channel) return console.error("Canal de réservation non trouvé");
-
-    console.log(`Canal de réservation trouvé : ${channel.name}`);
 
     // Vérifier si une bille avec le même nom existe déjà
     const messages = await channel.messages.fetch({ limit: 100 });
@@ -73,7 +64,7 @@ client.on('messageCreate', async (message) => {
 
     if (existingMessage) {
       await message.delete();
-      return message.author.send(`Une bille avec le nom "${billeName}" existe déjà.`).catch(console.error);
+      return message.author.send(`Une bille avec le nom "${billeName}" existe déjà.`);
     }
 
     let messageContent;
@@ -89,13 +80,11 @@ client.on('messageCreate', async (message) => {
           url: billeImage,
         },
       };
-      billes.set(billeName, { reserved: false, reserverPar: null, messageId: null });
-      console.log(`Bille ajoutée à la liste : ${billeName}`);
     } else {
       const user = await client.users.fetch(statusOrUserId);
       if (!user) {
         await message.delete();
-        return message.author.send("L'utilisateur mentionné n'est pas valide.").catch(console.error);
+        return message.author.send("L'utilisateur mentionné n'est pas valide.");
       }
 
       messageContent = `La ${billeName} est réservée par ${user.username}`;
@@ -107,24 +96,17 @@ client.on('messageCreate', async (message) => {
           url: billeImage,
         },
       };
-      billes.set(billeName, { reserved: true, reserverPar: user.id, messageId: null });
-      console.log(`Bille ajoutée à la liste : ${billeName}`);
     }
 
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
-    billes.get(billeName).messageId = billeMessage.id;
-
-    await billeMessage.react('👍'); // Ajout de la réaction de pouce jaune
+    await billeMessage.react('👍');
 
     await message.delete();
-    message.author.send(`"${billeName}" créé avec succès.`).catch(console.error);
+    message.author.send(`"${billeName}" créé avec succès.`);
   }
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-  console.log(`Réaction ajoutée par ${user.username} : ${reaction.emoji.name}`);
-
-  // Assurez-vous que le message est complètement chargé
   if (reaction.partial) {
     try {
       await reaction.fetch();
@@ -134,80 +116,61 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
   }
 
-  console.log(`Auteur du message : ${reaction.message.author ? reaction.message.author.username : 'null'}`);
-  console.log(`Est-ce un bot ? : ${reaction.message.author ? reaction.message.author.bot : 'null'}`);
-
-  if (!reaction.message.author || !reaction.message.author.bot || reaction.emoji.name !== '👍') {
-    console.log('Réaction ignorée.');
-    return;
-  }
-
-  console.log(`Réaction valide détectée sur le message : ${reaction.message.id}`);
+  if (!reaction.message.author.bot || reaction.emoji.name !== '👍') return;
 
   const billeName = reaction.message.embeds[0]?.title;
-  if (!billeName) {
-    console.log('Nom de la bille non trouvé.');
-    return;
-  }
-
-  const bille = billes.get(billeName);
-  if (!bille) {
-    console.log('Bille non trouvée dans la liste.');
-    return;
-  }
+  if (!billeName) return;
 
   const channel = await client.channels.fetch(RESA_CHANNEL_ID);
   if (!channel) return console.error("Canal de réservation non trouvé");
 
-  if (bille.reserved && bille.reserverPar === user.id) {
+  const messages = await channel.messages.fetch({ limit: 100 });
+  const billeMessage = messages.find(msg => msg.embeds[0]?.title === billeName);
+  if (!billeMessage) return;
+
+  const billeEmbed = billeMessage.embeds[0];
+  const reserverPar = billeEmbed.description.match(/réservée par (.+)\./)?.[1];
+
+  if (reserverPar === user.username) {
     // Annuler la réservation
-    console.log(`Annulation de la réservation de la bille : ${billeName}`);
-    bille.reserved = false;
-    bille.reserverPar = null;
-    await reaction.message.edit({
+    await billeMessage.edit({
       content: `Vous pouvez réserver la ${billeName}`,
       embeds: [{
         color: 0x0099ff,
         title: billeName,
         description: 'Vous pouvez réserver cette bille.',
         image: {
-          url: reaction.message.embeds[0].image.url,
+          url: billeEmbed.image.url,
         },
       }],
     });
-    await user.send(`Votre réservation de la bille "${billeName}" a été annulée.`).catch(console.error);
+    await user.send(`Votre réservation de la bille "${billeName}" a été annulée.`);
     await reaction.users.remove(user.id);
-  } else if (bille.reserved && bille.reserverPar !== user.id) {
+  } else if (reserverPar && reserverPar !== user.username) {
     // Bille déjà réservée par un autre utilisateur
-    console.log(`Bille déjà réservée par un autre utilisateur : ${billeName}`);
-    const reserverUser = await client.users.fetch(bille.reserverPar);
-    await user.send(`Désolé, cette bille est déjà réservée par ${reserverUser.username}.`).catch(console.error);
+    await user.send(`Désolé, cette bille est déjà réservée par ${reserverPar}.`);
     await reaction.users.remove(user.id);
-  } else if (!bille.reserved) {
+  } else if (!reserverPar) {
     // Vérifier si l'utilisateur a déjà une réservation
-    console.log(`Vérification des réservations existantes pour l'utilisateur : ${user.username}`);
-    const existingReservation = Array.from(billes.values()).find(b => b.reserverPar === user.id);
+    const existingReservation = messages.find(msg => msg.embeds[0]?.description.includes(`réservée par ${user.username}`));
     if (existingReservation) {
-      console.log(`L'utilisateur a déjà une réservation : ${existingReservation.billeName}`);
-      await user.send(`Vous avez déjà réservé la bille "${existingReservation.billeName}". Veuillez annuler votre réservation avant d'en choisir une autre.`).catch(console.error);
+      const existingBilleName = existingReservation.embeds[0].title;
+      await user.send(`Vous avez déjà réservé la bille "${existingBilleName}". Veuillez annuler votre réservation avant d'en choisir une autre.`);
       await reaction.users.remove(user.id);
     } else {
       // Réserver la bille
-      console.log(`Réservation de la bille : ${billeName} par ${user.username}`);
-      bille.reserved = true;
-      bille.reserverPar = user.id;
-      await reaction.message.edit({
+      await billeMessage.edit({
         content: `La ${billeName} est réservée par ${user.username}`,
         embeds: [{
           color: 0xff0000,
           title: billeName,
           description: `Cette bille est réservée par ${user.username}.`,
           image: {
-            url: reaction.message.embeds[0].image.url,
+            url: billeEmbed.image.url,
           },
         }],
       });
-      await user.send(`Vous avez réservé la bille "${billeName}".`).catch(console.error);
+      await user.send(`Vous avez réservé la bille "${billeName}".`);
       await reaction.users.remove(user.id);
     }
   }
