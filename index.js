@@ -158,7 +158,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
     const existingReservation = messages.find(msg => msg.embeds[0]?.description.includes(`réservée par ${user.username}`));
     if (existingReservation) {
       const existingBilleName = existingReservation.embeds[0].title;
-      await user.send(`Vous avez déjà réservé la bille "${existingBilleName}". Veuillez annuler votre réservation avant d'en choisir une autre.`);
+      const existingMessageId = existingReservation.id;
+      const existingMessageLink = `https://discord.com/channels/${channel.guild.id}/${channel.id}/${existingMessageId}`;
+      await user.send(`Vous avez déjà réservé la bille "${existingBilleName}". Veuillez annuler votre réservation [ici](${existingMessageLink}) avant d'en choisir une autre.`);
       await reaction.users.remove(user.id);
     } else {
       // Réserver la bille
