@@ -90,6 +90,7 @@ client.on('messageCreate', async (message) => {
         },
       };
       billes.set(billeName, { reserved: false, reserverPar: null, messageId: null });
+      console.log(`Bille ajoutée à la liste : ${billeName}`);
     } else {
       const user = await client.users.fetch(statusOrUserId);
       if (!user) {
@@ -107,6 +108,7 @@ client.on('messageCreate', async (message) => {
         },
       };
       billes.set(billeName, { reserved: true, reserverPar: user.id, messageId: null });
+      console.log(`Bille ajoutée à la liste : ${billeName}`);
     }
 
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
