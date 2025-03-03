@@ -121,6 +121,17 @@ client.on('messageCreate', async (message) => {
 
 client.on('messageReactionAdd', async (reaction, user) => {
   console.log(`Réaction ajoutée par ${user.username} : ${reaction.emoji.name}`);
+
+  // Assurez-vous que le message est complètement chargé
+  if (reaction.partial) {
+    try {
+      await reaction.fetch();
+    } catch (error) {
+      console.error('Erreur lors du chargement de la réaction :', error);
+      return;
+    }
+  }
+
   console.log(`Auteur du message : ${reaction.message.author ? reaction.message.author.username : 'null'}`);
   console.log(`Est-ce un bot ? : ${reaction.message.author ? reaction.message.author.bot : 'null'}`);
 
