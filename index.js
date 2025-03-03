@@ -116,7 +116,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
   }
 
-  if (!reaction.message.author.bot || reaction.emoji.name !== '👍') return;
+  if (!reaction.message.author.bot || reaction.emoji.name !== '👍' || user.bot) return;
 
   const billeName = reaction.message.embeds[0]?.title;
   if (!billeName) return;
