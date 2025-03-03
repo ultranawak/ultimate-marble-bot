@@ -14,6 +14,8 @@ const client = new Client({
   partials: [Partials.Message, Partials.Reaction],
 });
 
+console.log('Bot démarré.');
+
 function isValidUrl(string) {
   try {
     new URL(string);
@@ -30,8 +32,11 @@ const billes = new Map(); // Stocke les informations des billes
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
+  console.log(`Message reçu : ${message.content}`);
+
   // Vérifier si l'utilisateur est administrateur
   const isAdmin = message.member.permissions.has('ADMINISTRATOR');
+  console.log(`L'utilisateur est administrateur : ${isAdmin}`);
 
   // Commande pour créer une bille
   if (message.content.startsWith('!create')) {
@@ -50,6 +55,8 @@ client.on('messageCreate', async (message) => {
     const billeImage = args[2];
     const statusOrUserId = args[3];
 
+    console.log(`Arguments extraits : nom=${billeName}, image=${billeImage}, statusOrUser=${statusOrUserId}`);
+
     if (!isValidUrl(billeImage)) {
       await message.delete();
       return message.author.send("L'URL de l'image fournie n'est pas valide.");
@@ -57,6 +64,8 @@ client.on('messageCreate', async (message) => {
 
     const channel = await client.channels.fetch(RESA_CHANNEL_ID);
     if (!channel) return console.error("Canal de réservation non trouvé");
+
+    console.log(`Canal de réservation trouvé : ${channel.name}`);
 
     // Vérifier si une bille avec le même nom existe déjà
     const messages = await channel.messages.fetch({ limit: 100 });
@@ -111,7 +120,11 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
+  console.log(`Réaction ajoutée par ${user.username} : ${reaction.emoji.name}`);
+
   if (!reaction.message.author || !reaction.message.author.bot || reaction.emoji.name !== '👍') return;
+
+  console.log(`Réaction valide détectée sur le message : ${reaction.message.id}`);
 
   const billeName = reaction.message.embeds[0]?.title;
   if (!billeName) return;
