@@ -85,11 +85,11 @@ client.on('messageCreate', async (message) => {
         return message.author.send("L'utilisateur mentionné n'est pas valide.");
       }
 
-      messageContent = `La ${billeName} est réservée par ${user.tag}`;
+      messageContent = `La ${billeName} est réservée par ${user.username}`;
       messageEmbed = {
         color: 0xff0000,
         title: billeName,
-        description: `Cette bille est réservée par ${user.tag}.`,
+        description: `Cette bille est réservée par ${user.username}.`,
         image: {
           url: billeImage,
         },
