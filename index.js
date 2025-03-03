@@ -122,21 +122,31 @@ client.on('messageCreate', async (message) => {
 client.on('messageReactionAdd', async (reaction, user) => {
   console.log(`Réaction ajoutée par ${user.username} : ${reaction.emoji.name}`);
 
-  if (!reaction.message.author || !reaction.message.author.bot || reaction.emoji.name !== '👍') return;
+  if (!reaction.message.author || !reaction.message.author.bot || reaction.emoji.name !== '👍') {
+    console.log('Réaction ignorée.');
+    return;
+  }
 
   console.log(`Réaction valide détectée sur le message : ${reaction.message.id}`);
 
   const billeName = reaction.message.embeds[0]?.title;
-  if (!billeName) return;
+  if (!billeName) {
+    console.log('Nom de la bille non trouvé.');
+    return;
+  }
 
   const bille = billes.get(billeName);
-  if (!bille) return;
+  if (!bille) {
+    console.log('Bille non trouvée dans la liste.');
+    return;
+  }
 
   const channel = await client.channels.fetch(RESA_CHANNEL_ID);
   if (!channel) return console.error("Canal de réservation non trouvé");
 
   if (bille.reserved && bille.reserverPar === user.id) {
     // Annuler la réservation
+    console.log(`Annulation de la réservation de la bille : ${billeName}`);
     bille.reserved = false;
     bille.reserverPar = null;
     await reaction.message.edit({
@@ -154,17 +164,21 @@ client.on('messageReactionAdd', async (reaction, user) => {
     await reaction.users.remove(user.id);
   } else if (bille.reserved && bille.reserverPar !== user.id) {
     // Bille déjà réservée par un autre utilisateur
+    console.log(`Bille déjà réservée par un autre utilisateur : ${billeName}`);
     const reserverUser = await client.users.fetch(bille.reserverPar);
     await user.send(`Désolé, cette bille est déjà réservée par ${reserverUser.username}.`);
     await reaction.users.remove(user.id);
   } else if (!bille.reserved) {
     // Vérifier si l'utilisateur a déjà une réservation
+    console.log(`Vérification des réservations existantes pour l'utilisateur : ${user.username}`);
     const existingReservation = Array.from(billes.values()).find(b => b.reserverPar === user.id);
     if (existingReservation) {
+      console.log(`L'utilisateur a déjà une réservation : ${existingReservation.billeName}`);
       await user.send(`Vous avez déjà réservé la bille "${existingReservation.billeName}". Veuillez annuler votre réservation avant d'en choisir une autre.`);
       await reaction.users.remove(user.id);
     } else {
       // Réserver la bille
+      console.log(`Réservation de la bille : ${billeName} par ${user.username}`);
       bille.reserved = true;
       bille.reserverPar = user.id;
       await reaction.message.edit({
