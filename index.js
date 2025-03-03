@@ -121,6 +121,8 @@ client.on('messageCreate', async (message) => {
 
 client.on('messageReactionAdd', async (reaction, user) => {
   console.log(`Réaction ajoutée par ${user.username} : ${reaction.emoji.name}`);
+  console.log(`Auteur du message : ${reaction.message.author ? reaction.message.author.username : 'null'}`);
+  console.log(`Est-ce un bot ? : ${reaction.message.author ? reaction.message.author.bot : 'null'}`);
 
   if (!reaction.message.author || !reaction.message.author.bot || reaction.emoji.name !== '👍') {
     console.log('Réaction ignorée.');
