@@ -101,12 +101,24 @@ client.on('messageCreate', async (message) => {
       };
     }
 
-
     const billeMessage = await channel.send({ content: messageContent, embeds: [messageEmbed] });
     await billeMessage.react('👍');
 
     await message.delete();
     message.author.send(`"${billeName}" créé avec succès.`);
+  }
+
+  // Commande pour envoyer le message de demande d'inscription
+  if (message.content.startsWith('!inscription')) {
+    if (!isAdmin) {
+      await message.delete();
+      return message.author.send("Vous n'êtes pas autorisé à utiliser cette commande.");
+    }
+
+    const inscriptionMessage = await message.channel.send("Réagissez à ce message pour faire une demande d'inscription.");
+    await inscriptionMessage.react('✅'); // Ajoutez une réaction de check
+
+    await message.delete();
   }
 });
 
@@ -120,8 +132,24 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
   }
 
-  if (!reaction.message.author.bot || reaction.emoji.name !== '👍' || user.bot) return;
+  if (user.bot) return;
 
+  const message = reaction.message;
+
+  // Vérifiez si la réaction est sur le message de demande d'inscription
+  if (message.content === "Réagissez à ce message pour faire une demande d'inscription." && reaction.emoji.name === '✅') {
+    // Envoyer un MP à l'utilisateur
+    await user.send("Votre demande d'inscription a bien été enregistrée et un administrateur validera votre inscription sous peu. N'oubliez pas de vous affranchir des frais d'inscription de 5$ par virement Interac au 438-530-7386.");
+
+    // Envoyer un MP à l'administrateur
+    const adminId = 'ID_DE_L_ADMINISTRATEUR'; // Remplacez par l'ID de l'administrateur
+    const admin = await client.users.fetch(adminId);
+    await admin.send(`Nouvelle demande d'inscription de ${user.username} (${user.id}).`);
+
+    return;
+  }
+
+  // ... (code existant pour la gestion des réactions sur les billes)
   const billeName = reaction.message.embeds[0]?.title;
   if (!billeName) return;
 
