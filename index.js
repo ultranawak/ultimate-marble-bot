@@ -142,9 +142,14 @@ client.on('messageReactionAdd', async (reaction, user) => {
     await user.send("Votre demande d'inscription a bien été enregistrée et un administrateur validera votre inscription sous peu. N'oubliez pas de vous affranchir des frais d'inscription de 5$ par virement Interac au 438-530-7386.");
 
     // Envoyer un MP à l'administrateur
-    const adminId = 'ID_DE_L_ADMINISTRATEUR'; // Remplacez par l'ID de l'administrateur
-    const admin = await client.users.fetch(adminId);
-    await admin.send(`Nouvelle demande d'inscription de ${user.username} (${user.id}).`);
+    const adminId = '232244521998614528'; // Remplacez par l'ID de l'administrateur
+    try {
+      const admin = await client.users.fetch(adminId);
+      await admin.send(`Nouvelle demande d'inscription de ${user.username} (${user.id}).`);
+      console.log(`Message envoyé à l'administrateur ${admin.username}`);
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi du message à l\'administrateur :', error);
+    }
 
     return;
   }
