@@ -139,13 +139,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
   // Vérifiez si la réaction est sur le message de demande d'inscription
   if (message.content === "Réagissez à ce message pour faire une demande d'inscription." && reaction.emoji.name === '✅') {
     // Envoyer un MP à l'utilisateur
-    await user.send("Votre demande d'inscription a bien été enregistrée et un administrateur validera votre inscription sous peu. N'oubliez pas de vous affranchir des frais d'inscription de 5$ par virement Interac au 438-530-7386.");
+    await user.send(`Votre demande d'inscription a bien été enregistrée et un administrateur validera votre inscription sous peu.\nN'oubliez pas de vous affranchir des frais d'inscription de 5$ par virement Interac au **438-530-7386**.`);
 
     // Envoyer un MP à l'administrateur
     const adminId = '232244521998614528'; // Remplacez par l'ID de l'administrateur
     try {
       const admin = await client.users.fetch(adminId);
-      await admin.send(`Nouvelle demande d'inscription de ${user.username} (${user.id}).`);
+      const member = await reaction.message.guild.members.fetch(user.id);
+      const displayName = member.displayName;
+      await admin.send(`Nouvelle demande d'inscription de ${displayName} (${user.id}).`);
       console.log(`Message envoyé à l'administrateur ${admin.username}`);
     } catch (error) {
       console.error('Erreur lors de l\'envoi du message à l\'administrateur :', error);
