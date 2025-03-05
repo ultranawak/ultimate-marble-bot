@@ -253,6 +253,8 @@ client.on('guildMemberAdd', async (member) => {
   const welcomeChannel = await client.channels.fetch(GENERAL_CHANNEL_ID);
   if (!welcomeChannel) return console.error("Canal général non trouvé");
 
+  // Envoyer un message de bienvenue dans le canal général
+  welcomeChannel.send(`Bienvenue ${member}! N'oubliez pas de vous inscrire en réagissant au message dans le canal <#${INSCRIPTION_CHANNEL_ID}>.`);
 
   // Envoyer un message privé de bienvenue
   try {
