@@ -26,6 +26,8 @@ function isValidUrl(string) {
 }
 
 const RESA_CHANNEL_ID = "1345791307221696563"; // ID du canal de réservation
+const INSCRIT_ROLE_ID = "1345280802988097568"; // ID du rôle "Inscrit"
+const ADMIN_ID = '232244521998614528'; // ID de l'administrateur
 
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
@@ -138,16 +140,31 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
   // Vérifiez si la réaction est sur le message de demande d'inscription
   if (message.content === "Réagissez à ce message pour faire une demande d'inscription." && reaction.emoji.name === '✅') {
+    const member = await reaction.message.guild.members.fetch(user.id);
+
+    // Vérifiez si l'utilisateur a déjà le rôle "Inscrit"
+    if (member.roles.cache.has(INSCRIT_ROLE_ID)) {
+      await user.send("Merci pour ton enthousiasme mais tu es déjà inscrit ^^");
+      return;
+    }
+
+    // Vérifiez si le bot a déjà envoyé un message de demande d'inscription à l'administrateur pour cet utilisateur aujourd'hui
+    const admin = await client.users.fetch(ADMIN_ID);
+    const adminMessages = await admin.dmChannel.messages.fetch({ limit: 100 });
+    const today = new Date().toISOString().split('T')[0];
+    const alreadyRequested = adminMessages.some(msg => msg.content.includes(`Nouvelle demande d'inscription de ${member.displayName}`) && msg.createdAt.toISOString().split('T')[0] === today);
+
+    if (alreadyRequested) {
+      await user.send("Vous avez déjà fait une demande d'inscription pour aujourd'hui. Veuillez réessayer demain.");
+      return;
+    }
+
     // Envoyer un MP à l'utilisateur
     await user.send(`Votre demande d'inscription a bien été enregistrée et un administrateur validera votre inscription sous peu.\nN'oubliez pas de vous affranchir des frais d'inscription de 5$ par virement Interac au **438-530-7386**.`);
 
     // Envoyer un MP à l'administrateur
-    const adminId = '232244521998614528'; // Remplacez par l'ID de l'administrateur
     try {
-      const admin = await client.users.fetch(adminId);
-      const member = await reaction.message.guild.members.fetch(user.id);
-      const displayName = member.displayName;
-      await admin.send(`Nouvelle demande d'inscription de ${displayName} (${user.id}).`);
+      await admin.send(`Nouvelle demande d'inscription de ${member.displayName} (${user.id}).`);
       console.log(`Message envoyé à l'administrateur ${admin.username}`);
     } catch (error) {
       console.error('Erreur lors de l\'envoi du message à l\'administrateur :', error);
