@@ -28,6 +28,8 @@ function isValidUrl(string) {
 const RESA_CHANNEL_ID = "1345791307221696563"; // ID du canal de réservation
 const INSCRIT_ROLE_ID = "1345280802988097568"; // ID du rôle "Inscrit"
 const ADMIN_ID = '232244521998614528'; // ID de l'administrateur
+const GENERAL_CHANNEL_ID = "1345262832593272926"; // ID du canal général
+const INSCRIPTION_CHANNEL_ID = "1346986686462164993"; // ID du canal d'inscription
 
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
@@ -243,6 +245,21 @@ client.on('messageReactionAdd', async (reaction, user) => {
       await user.send(`Vous avez réservé la bille "${billeName}".`);
       await reaction.users.remove(user.id);
     }
+  }
+});
+
+// Envoyer un message de bienvenue aux nouveaux membres
+client.on('guildMemberAdd', async (member) => {
+  const welcomeChannel = await client.channels.fetch(GENERAL_CHANNEL_ID);
+  if (!welcomeChannel) return console.error("Canal général non trouvé");
+
+
+  // Envoyer un message privé de bienvenue
+  try {
+    await member.send(`Bienvenue sur le serveur ! Pour vous inscrire, veuillez vous rendre dans le canal <#${INSCRIPTION_CHANNEL_ID}> et réagir au message du bot.`);
+    console.log(`Message de bienvenue envoyé à ${member.user.tag}`);
+  } catch (error) {
+    console.error(`Erreur lors de l'envoi du message de bienvenue à ${member.user.tag} :`, error);
   }
 });
 
