@@ -148,7 +148,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
     // Vérifiez si l'utilisateur a déjà le rôle "Inscrit"
     if (member.roles.cache.has(INSCRIT_ROLE_ID)) {
-      await user.send("Merci pour ton enthousiasme mais tu es déjà inscrit ^^");
+      await user.send("Merci pour ton enthousiasme mais tu es déjà inscrit(e) ^^");
       return;
     }
 
