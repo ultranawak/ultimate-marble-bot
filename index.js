@@ -125,6 +125,8 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
+  console.log('Réaction ajoutée détectée'); // Log pour vérifier si la réaction est détectée
+
   if (reaction.partial) {
     try {
       await reaction.fetch();
@@ -140,6 +142,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
   // Vérifiez si la réaction est sur le message de demande d'inscription
   if (message.content === "Réagissez à ce message pour faire une demande d'inscription." && reaction.emoji.name === '✅') {
+    console.log('Réaction sur le message de demande d\'inscription détectée'); // Log pour vérifier si la réaction est sur le bon message
+
     const member = await reaction.message.guild.members.fetch(user.id);
 
     // Vérifiez si l'utilisateur a déjà le rôle "Inscrit"
@@ -150,7 +154,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
     // Vérifiez si le bot a déjà envoyé un message de demande d'inscription à l'administrateur pour cet utilisateur aujourd'hui
     const admin = await client.users.fetch(ADMIN_ID);
-    const adminMessages = await admin.dmChannel.messages.fetch({ limit: 100 });
+    const adminDM = await admin.createDM();
+    const adminMessages = await adminDM.messages.fetch({ limit: 100 });
     const today = new Date().toISOString().split('T')[0];
     const alreadyRequested = adminMessages.some(msg => msg.content.includes(`Nouvelle demande d'inscription de ${member.displayName}`) && msg.createdAt.toISOString().split('T')[0] === today);
 
